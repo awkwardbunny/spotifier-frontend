@@ -5,14 +5,14 @@ import { createBrowserHistory } from "history";
 
 const App = () => {
   return (
-    <React.StrictMode>
+    // <React.StrictMode>
       <Router history={createBrowserHistory()}>
         <Switch>
           <Route path="/callback" component={CallbackPage} />
           <Route component={MainPage} />
         </Switch>
       </Router>
-    </React.StrictMode>
+    // </React.StrictMode>
   );
 };
 

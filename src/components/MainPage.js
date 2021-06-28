@@ -1,48 +1,26 @@
-// import axios from 'axios';
-// import React, { useState, useEffect } from 'react';
-// import { SpotifyApiContext, SpotifyApiAxiosContext } from 'react-spotify-api';
-import { authEndpoint, clientId, redirectUri, scopes } from '../config';
+import React, { useState } from 'react';
+import SpotifyWebApi from 'spotify-web-api-node';
 import './MainPage.css';
 
-// axios.interceptors.response.use(
-//   response => {
-//     console.log("B");
-//     return response;
-//   }, error => {
-//     console.log("A");
-//     // if(error.response.status === 401 && !error.config._retry){
-//     //   error.config._retry = true;
-//     //   const access_token = 
-//     // }
-//     if(error.response.status === 401) {
-//       localStorage.clear('token');
-//     }
-//   }
-// );
+import { APIContext } from './Contexts';
+import LoginButton from './LoginButton';
+import Spotifier from './Spotifier';
 
 const MainPage = () => {
-  const token = localStorage.getItem('token');
+
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const logout = () => { localStorage.removeItem('token'); setToken(); };
+
+  const api = new SpotifyWebApi();
+  api.setAccessToken(token);
 
   return (
-    // <SpotifyApiAxiosContext.Provider value={axios}>
-      // <SpotifyApiContext.Provider value={token}>
-        <div className="App">
-          <header className="App-header">
-            {!token && (
-              <a
-              className="btn btn--loginApp-link"
-              href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join("%20")}&response_type=token&show_dialog=true`}
-              >Login to Spotify</a>
-            )}
-
-            {token && (
-              <h1>Logged in</h1>
-              // <SpotifyPlayer token={localStorage.getItem('token')} uris={["spotify:track:4cOdK2wGLETKBW3PvgPWqT"]} />
-            )}
-          </header>
-        </div>
-      // </SpotifyApiContext.Provider>
-    // </SpotifyApiAxiosContext.Provider>
+    <div className="App">
+      <header className="App-header">
+        {!token && (<LoginButton />)}
+        {token && <APIContext.Provider value={api}> <Spotifier logout={logout}/> </APIContext.Provider>}
+      </header>
+    </div>
   );
 };
 
