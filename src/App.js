@@ -1,18 +1,26 @@
-import React from "react";
-import { Router, Switch, Route } from "react-router-dom";
-import { MainPage, CallbackPage } from "./components";
-import { createBrowserHistory } from "history";
+import React from 'react';
+import { useCookies } from 'react-cookie';
+import './App.css';
+
+import { Spotifier } from './components';
 
 const App = () => {
+  
+  const [cookies, setCookie, removeCookie] = useCookies(['jwt'])
+  const logout = () => { removeCookie("jwt") }
+  const refresh = (v) => { setCookie("jwt", v) }
+  
   return (
-    // <React.StrictMode>
-      <Router history={createBrowserHistory()}>
-        <Switch>
-          <Route path="/callback" component={CallbackPage} />
-          <Route component={MainPage} />
-        </Switch>
-      </Router>
-    // </React.StrictMode>
+    <div className="App">
+      <header className="App-header">
+        {!cookies.jwt && 
+          <a className="btn btn--loginApp-link" href="/api/auth">
+            Login to Spotify
+          </a>
+        }
+        {cookies.jwt && <Spotifier logout={logout} refresh={refresh} />}
+      </header>
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-import MainPage from "./MainPage"
-import CallbackPage from "./CallbackPage"
+import Spotifier from "./Spotifier";
 
-export { MainPage, CallbackPage }
+export { Spotifier };
